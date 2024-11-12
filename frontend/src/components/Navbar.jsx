@@ -6,7 +6,7 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('token');  
     localStorage.removeItem('user');
     setIsAuthenticated(false);
     navigate('/register');
