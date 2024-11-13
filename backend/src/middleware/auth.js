@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
 
 export const authenticateToken = async (req, res, next) => {
   try {
@@ -10,9 +11,24 @@ export const authenticateToken = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = { id: decoded.userId };
+    const user = await User.findById(decoded.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    req.user = user;
     next();
   } catch (error) {
     res.status(401).json({ message: 'Invalid token' });
+  }
+};
+
+export const isAdmin = async (req, res, next) => {
+  try {
+    if (!req.user.isAdmin) {
+      return res.status(403).json({ message: 'Access denied. Admin only.' });
+    }
+    next();
+  } catch (error) {
+    res.status(500).json({ message: 'Error checking admin status' });
   }
 };  

@@ -10,6 +10,7 @@ import Profile from './pages/Profile';
 import WomenSafety from './pages/WomenSafety';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -32,6 +33,7 @@ function App() {
             <Route path="/crowdfunding" element={isAuthenticated ? <Crowdfunding /> : <Navigate to="/register" />} />
             <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/register" />} />
             <Route path="/women-safety" element={isAuthenticated ? <WomenSafety /> : <Navigate to="/register" />} />
+            <Route path="/admin" element={isAuthenticated ? <AdminDashboard /> : <Navigate to="/register" />} />
           </Routes>
         </main>
       </div>

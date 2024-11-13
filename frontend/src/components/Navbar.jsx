@@ -1,9 +1,27 @@
 // frontend/src/components/Navbar.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function Navbar({ isAuthenticated, setIsAuthenticated }) {
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:5000/api/auth/check-admin', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setIsAdmin(response.data.isAdmin);
+      } catch (error) {
+        console.error('Error checking admin status:', error);
+      }
+    };
+
+    checkAdmin();
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');  
@@ -23,6 +41,14 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
               <Link to="/crowdfunding" className="hover:underline">Crowdfunding</Link>
               <Link to="/profile" className="hover:underline">Profile</Link>
               <Link to="/women-safety" className="hover:underline">Women's Safety</Link>
+              {isAdmin && (
+                <Link 
+                  to="/admin" 
+                  className="text-white hover:text-gray-300"
+                >
+                  Admin Dashboard
+                </Link>
+              )}
               <button 
                 onClick={handleLogout}
                 className="hover:underline"
