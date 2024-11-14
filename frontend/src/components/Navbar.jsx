@@ -6,6 +6,7 @@ import axios from 'axios';
 function Navbar({ isAuthenticated, setIsAuthenticated }) {
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     const checkAdmin = async () => {

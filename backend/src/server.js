@@ -6,6 +6,8 @@ import authRoutes from './routes/authRoutes.js';
 import eventRoutes from './routes/eventRoutes.js';
 import crowdfundingRoutes from './routes/crowdfundingRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import emergencyRoutes from './routes/emergencyRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 dotenv.config();
 
@@ -20,6 +22,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/crowdfunding', crowdfundingRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/emergency', emergencyRoutes);
+app.use('/api/users', userRoutes);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)

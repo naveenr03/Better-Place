@@ -22,11 +22,7 @@ try {
   // Don't throw here - let the application start, but payment functions will fail
 }
 
-console.log('Stripe Key Status:', {
-  secretKeyExists: !!process.env.STRIPE_SECRET_KEY,
-  secretKeyPrefix: process.env.STRIPE_SECRET_KEY?.substring(0, 7),
-  secretKeyLength: process.env.STRIPE_SECRET_KEY?.length
-});
+
 
 export const createCampaign = async (req, res) => {
   try {

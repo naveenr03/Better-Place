@@ -5,6 +5,7 @@ function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('events');
   const [events, setEvents] = useState([]);
   const [campaigns, setCampaigns] = useState([]);
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -18,11 +19,16 @@ function AdminDashboard() {
           headers: { Authorization: `Bearer ${token}` }
         });
         setEvents(response.data);
-      } else {
+      } else if (activeTab === 'campaigns') {
         const response = await axios.get('http://localhost:5000/api/admin/campaigns', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setCampaigns(response.data);
+      } else if (activeTab === 'users') {
+        const response = await axios.get('http://localhost:5000/api/admin/users', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setUsers(response.data);
       }
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -41,6 +47,21 @@ function AdminDashboard() {
     } catch (error) {
       console.error('Error deleting item:', error);
       alert('Error deleting item');
+    }
+  };
+
+  const handleRoleUpdate = async (userId, isAdmin) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.patch(
+        `http://localhost:5000/api/admin/users/${userId}/role`,
+        { isAdmin },
+        { headers: { Authorization: `Bearer ${token}` }}
+      );
+      fetchData();
+    } catch (error) {
+      console.error('Error updating user role:', error);
+      alert('Error updating user role');
     }
   };
 
@@ -64,6 +85,14 @@ function AdminDashboard() {
           }`}
         >
           Crowdfunding Campaigns
+        </button>
+        <button
+          onClick={() => setActiveTab('users')}
+          className={`px-4 py-2 rounded-lg ${
+            activeTab === 'users' ? 'bg-blue-600 text-white' : 'bg-gray-200'
+          }`}
+        >
+          Users
         </button>
       </div>
 
@@ -93,7 +122,7 @@ function AdminDashboard() {
             </div>
           ))}
         </div>
-      ) : (
+      ) : activeTab === 'campaigns' ? (
         <div className="grid gap-6">
           {campaigns.map(campaign => (
             <div key={campaign._id} className="bg-white p-6 rounded-lg shadow-md flex justify-between items-center">
@@ -124,6 +153,28 @@ function AdminDashboard() {
                 className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
               >
                 Delete
+              </button>
+            </div>
+          ))}
+        </div>
+      ) : activeTab === 'users' && (
+        <div className="grid gap-6">
+          {users.map(user => (
+            <div key={user._id} className="bg-white p-6 rounded-lg shadow-md flex justify-between items-center">
+              <div>
+                <h2 className="text-xl font-semibold">{user.name}</h2>
+                <p className="text-gray-600">{user.email}</p>
+                <p className="text-sm text-gray-500">
+                  Role: {user.isAdmin ? 'Admin' : 'User'}
+                </p>
+              </div>
+              <button
+                onClick={() => handleRoleUpdate(user._id, !user.isAdmin)}
+                className={`px-4 py-2 rounded-lg ${
+                  user.isAdmin ? 'bg-red-600' : 'bg-green-600'
+                } text-white`}
+              >
+                {user.isAdmin ? 'Remove Admin' : 'Make Admin'}
               </button>
             </div>
           ))}
