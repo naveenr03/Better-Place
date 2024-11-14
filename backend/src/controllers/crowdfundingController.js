@@ -77,8 +77,8 @@ export const createPaymentIntent = async (req, res) => {
     }
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount * 100), // Convert to cents and ensure integer
-      currency: 'usd',
+      amount: Math.round(amount * 100), // Convert to paise
+      currency: 'inr',
       metadata: { campaignId },
       description: `Donation to ${campaign.title}`
     });
@@ -89,7 +89,6 @@ export const createPaymentIntent = async (req, res) => {
     res.status(500).json({ 
       message: 'Error creating payment intent',
       error: error.message,
-      // Add more detailed error info for debugging
       details: process.env.NODE_ENV === 'development' ? {
         type: error.type,
         code: error.code,

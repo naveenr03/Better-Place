@@ -53,7 +53,7 @@ function DonationForm({ campaignId, onSuccess }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700">Amount (USD)</label>
+        <label className="block text-sm font-medium text-gray-700">Amount (INR)</label>
         <input
           type="number"
           value={amount}

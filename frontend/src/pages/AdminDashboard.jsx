@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { TrashIcon } from '@heroicons/react/24/outline';
 
 function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('events');
@@ -66,120 +67,129 @@ function AdminDashboard() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
-      
-      <div className="flex space-x-4 mb-6">
-        <button
-          onClick={() => setActiveTab('events')}
-          className={`px-4 py-2 rounded-lg ${
-            activeTab === 'events' ? 'bg-blue-600 text-white' : 'bg-gray-200'
-          }`}
-        >
-          Events
-        </button>
-        <button
-          onClick={() => setActiveTab('campaigns')}
-          className={`px-4 py-2 rounded-lg ${
-            activeTab === 'campaigns' ? 'bg-blue-600 text-white' : 'bg-gray-200'
-          }`}
-        >
-          Crowdfunding Campaigns
-        </button>
-        <button
-          onClick={() => setActiveTab('users')}
-          className={`px-4 py-2 rounded-lg ${
-            activeTab === 'users' ? 'bg-blue-600 text-white' : 'bg-gray-200'
-          }`}
-        >
-          Users
-        </button>
-      </div>
-
-      {activeTab === 'events' ? (
-        <div className="grid gap-6">
-          {events.map(event => (
-            <div key={event._id} className="bg-white p-6 rounded-lg shadow-md flex justify-between items-center">
-              <div>
-                <h2 className="text-xl font-semibold">{event.title}</h2>
-                <p className="text-gray-600">{event.description}</p>
-                <p className="text-sm text-gray-500">
-                  Date: {new Date(event.date).toLocaleDateString()}
-                </p>
-                <p className="text-sm text-gray-500">
-                  Location: {event.location}
-                </p>
-                <p className="text-sm text-gray-500">
-                  Participants: {event.participants?.length || 0}
-                </p>
-              </div>
-              <button
-                onClick={() => handleDelete(event._id, 'events')}
-                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
-              >
-                Delete
-              </button>
-            </div>
-          ))}
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+          <p className="mt-2 text-gray-600">Manage your platform's content and users</p>
         </div>
-      ) : activeTab === 'campaigns' ? (
-        <div className="grid gap-6">
-          {campaigns.map(campaign => (
-            <div key={campaign._id} className="bg-white p-6 rounded-lg shadow-md flex justify-between items-center">
-              <div>
-                <h2 className="text-xl font-semibold">{campaign.title}</h2>
-                <p className="text-gray-600">{campaign.description}</p>
-                <div className="mt-2">
-                  <div className="w-full bg-gray-200 rounded-full h-2.5">
-                    <div
-                      className="bg-blue-600 h-2.5 rounded-full"
-                      style={{ width: `${(campaign.currentAmount / campaign.targetAmount) * 100}%` }}
-                    ></div>
-                  </div>
-                  <div className="flex justify-between text-sm text-gray-500 mt-1">
-                    <span>${campaign.currentAmount} raised</span>
-                    <span>${campaign.targetAmount} goal</span>
+
+        <div className="bg-white rounded-xl shadow-lg p-4 mb-8">
+          <div className="flex space-x-4">
+            {['events', 'campaigns', 'users'].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+                  activeTab === tab
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {activeTab === 'events' && (
+          <div className="grid gap-6">
+            {events.map(event => (
+              <div key={event._id} className="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div className="p-6">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h2 className="text-xl font-semibold mb-2">{event.title}</h2>
+                      <p className="text-gray-600 mb-4">{event.description}</p>
+                      <div className="flex space-x-4 text-sm text-gray-500">
+                        <span>Date: {new Date(event.date).toLocaleDateString()}</span>
+                        <span>Location: {event.location}</span>
+                        <span>Participants: {event.participants?.length || 0}</span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleDelete(event._id, 'events')}
+                      className="text-red-600 hover:text-red-700 transition-colors"
+                    >
+                      <TrashIcon className="h-5 w-5" />
+                    </button>
                   </div>
                 </div>
-                <p className="text-sm text-gray-500">
-                  Status: {campaign.status}
-                </p>
-                <p className="text-sm text-gray-500">
-                  Donors: {campaign.donors?.length || 0}
-                </p>
               </div>
-              <button
-                onClick={() => handleDelete(campaign._id, 'campaigns')}
-                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
-              >
-                Delete
-              </button>
-            </div>
-          ))}
-        </div>
-      ) : activeTab === 'users' && (
-        <div className="grid gap-6">
-          {users.map(user => (
-            <div key={user._id} className="bg-white p-6 rounded-lg shadow-md flex justify-between items-center">
-              <div>
-                <h2 className="text-xl font-semibold">{user.name}</h2>
-                <p className="text-gray-600">{user.email}</p>
-                <p className="text-sm text-gray-500">
-                  Role: {user.isAdmin ? 'Admin' : 'User'}
-                </p>
+            ))}
+          </div>
+        )}
+
+        {activeTab === 'campaigns' && (
+          <div className="grid gap-6">
+            {campaigns.map(campaign => (
+              <div key={campaign._id} className="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div className="p-6">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <h2 className="text-xl font-semibold mb-2">{campaign.title}</h2>
+                      <p className="text-gray-600 mb-4">{campaign.description}</p>
+                      
+                      <div className="mb-4">
+                        <div className="flex justify-between text-sm text-gray-500 mb-1">
+                          <span>Progress</span>
+                          <span>{Math.round((campaign.currentAmount / campaign.targetAmount) * 100)}%</span>
+                        </div>
+                        <div className="w-full bg-gray-100 rounded-full h-2">
+                          <div
+                            className="bg-blue-600 h-2 rounded-full transition-all"
+                            style={{ width: `${(campaign.currentAmount / campaign.targetAmount) * 100}%` }}
+                          ></div>
+                        </div>
+                      </div>
+
+                      <div className="flex space-x-4 text-sm text-gray-500">
+                        <span>Target: ₹{campaign.targetAmount}</span>
+                        <span>Raised: ₹{campaign.currentAmount}</span>
+                        <span>Donors: {campaign.donors?.length || 0}</span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleDelete(campaign._id, 'campaigns')}
+                      className="text-red-600 hover:text-red-700 transition-colors"
+                    >
+                      <TrashIcon className="h-5 w-5" />
+                    </button>
+                  </div>
+                </div>
               </div>
-              <button
-                onClick={() => handleRoleUpdate(user._id, !user.isAdmin)}
-                className={`px-4 py-2 rounded-lg ${
-                  user.isAdmin ? 'bg-red-600' : 'bg-green-600'
-                } text-white`}
-              >
-                {user.isAdmin ? 'Remove Admin' : 'Make Admin'}
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
+
+        {activeTab === 'users' && (
+          <div className="grid gap-6">
+            {users.map(user => (
+              <div key={user._id} className="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div className="p-6">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h2 className="text-xl font-semibold mb-2">{user.name}</h2>
+                      <p className="text-gray-600 mb-4">{user.email}</p>
+                      <p className="text-sm text-gray-500">
+                        Role: {user.isAdmin ? 'Admin' : 'User'}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => handleRoleUpdate(user._id, !user.isAdmin)}
+                      className={`px-4 py-2 rounded-lg ${
+                        user.isAdmin ? 'bg-red-600' : 'bg-green-600'
+                      } text-white`}
+                    >
+                      {user.isAdmin ? 'Remove Admin' : 'Make Admin'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

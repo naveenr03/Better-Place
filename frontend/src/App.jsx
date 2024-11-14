@@ -22,20 +22,18 @@ function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-gray-100">
+      <div className="min-h-screen bg-gray-50">
         <Navbar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
-        <main className="container mx-auto px-4 py-8">
-          <Routes>
-            <Route path="/" element={isAuthenticated ? <Home /> : <Navigate to="/register" />} />
-            <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/" />} />
-            <Route path="/register" element={!isAuthenticated ? <Register /> : <Navigate to="/" />} />
-            <Route path="/events" element={isAuthenticated ? <EventForum /> : <Navigate to="/register" />} />
-            <Route path="/crowdfunding" element={isAuthenticated ? <Crowdfunding /> : <Navigate to="/register" />} />
-            <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/register" />} />
-            <Route path="/women-safety" element={isAuthenticated ? <WomenSafety /> : <Navigate to="/register" />} />
-            <Route path="/admin" element={isAuthenticated ? <AdminDashboard /> : <Navigate to="/register" />} />
-          </Routes>
-        </main>
+        <Routes>
+          <Route path="/" element={isAuthenticated ? <Home /> : <Navigate to="/register" />} />
+          <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/" />} />
+          <Route path="/register" element={!isAuthenticated ? <Register /> : <Navigate to="/" />} />
+          <Route path="/events" element={isAuthenticated ? <EventForum /> : <Navigate to="/register" />} />
+          <Route path="/crowdfunding" element={isAuthenticated ? <Crowdfunding /> : <Navigate to="/register" />} />
+          <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/register" />} />
+          <Route path="/women-safety" element={isAuthenticated ? <WomenSafety /> : <Navigate to="/register" />} />
+          <Route path="/admin" element={isAuthenticated ? <AdminDashboard /> : <Navigate to="/register" />} />
+        </Routes>
       </div>
     </Router>
   );

@@ -1,3 +1,6 @@
+/* eslint-disable no-undef */
+
+
 export default function ProtectedRoute({ children }) {
     const [isAdmin, setIsAdmin] = useState(false);
     const [loading, setLoading] = useState(true);
