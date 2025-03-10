@@ -20,6 +20,9 @@ build/
 
 # Environment variables
 .env
+frontend/ .env
+backend/ .env
+
 
 # MacOS
 .DS_Store
